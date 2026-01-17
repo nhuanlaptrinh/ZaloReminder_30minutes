@@ -197,7 +197,7 @@
       ],
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "podcmfCkxJVn1em8",
+          "id": "INVALID_GoogleCalendar_CREDENTIAL_ID",
           "name": "Google Calendar account 8"
         }
       }
@@ -230,7 +230,7 @@
       ],
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "podcmfCkxJVn1em8",
+          "id": "INVALID_GoogleCalendar_CREDENTIAL_ID",
           "name": "Google Calendar account 8"
         }
       }
@@ -265,7 +265,7 @@
       ],
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "podcmfCkxJVn1em8",
+          "id": "INVALID_GoogleCalendar_CREDENTIAL_ID",
           "name": "Google Calendar account 8"
         }
       }
@@ -294,7 +294,7 @@
       ],
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "podcmfCkxJVn1em8",
+          "id": "INVALID_GoogleCalendar_CREDENTIAL_ID",
           "name": "Google Calendar account 8"
         }
       }
@@ -328,25 +328,10 @@
       ],
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "podcmfCkxJVn1em8",
+          "id": "INVALID_GoogleCalendar_CREDENTIAL_ID",
           "name": "Google Calendar account 8"
         }
       }
-    },
-    {
-      "parameters": {
-        "content": "# 🤖 Google Calendar AI Agent - Hướng Dẫn Cho Người Mới\n\n## Công Dụng\nTrợ lý AI thông minh giúp quản lý Google Calendar bằng ngôn ngữ tự nhiên. Chỉ cần chat như nói chuyện với người thật!\n\n## ✨ Tính Năng\n- **Tạo Sự Kiện**: \"Đặt lịch ăn trưa ngày mai lúc 12 giờ\"\n- **Xem Lịch**: \"Hôm nay tôi có cuộc họp nào?\"\n- **Sửa Sự Kiện**: \"Dời cuộc họp 3 giờ sang 4 giờ chiều\"\n- **Xóa Sự Kiện**: \"Hủy lịch khám răng\"\n- **Kiểm Tra Thời Gian Rảnh**: \"Chiều nay tôi rảnh lúc nào?\"\n\n## 🛠️ Cài Đặt (Chỉ Làm 1 Lần)\n1. **Google Calendar**: Kết nối tài khoản Google trong phần credentials của n8n\n2. **API Gemini/OpenAI**: Thêm API key vào credentials của n8n\n3. **Import Workflow**: Copy file JSON và import vào n8n\n4. **Kích Hoạt**: Bật workflow lên\n\n## 💬 Cách Sử Dụng\nChỉ cần gõ yêu cầu bằng ngôn ngữ tự nhiên trong chat:\n\n**✅ Ví Dụ Tốt:**\n- \"Tạo họp team ngày mai lúc 9 giờ sáng\"\n- \"Đặt bữa tối với Sarah thứ 6 lúc 7 giờ tối\"\n- \"Xem lịch tuần sau\"\n- \"Hủy cuộc hẹn 2 giờ chiều\"\n- \"Thứ 5 tôi rảnh lúc nào?\"\n\n**❌ Nên Tránh:**\n- Yêu cầu phức tạp nhiều bước\n- Thời gian không rõ ràng (\"lúc nào đó sau này\")\n\n## 🔧 Các Thành Phần Chính\n\n### **Chat Trigger**\n- Điểm nhận tin nhắn từ người dùng\n- Duy trì lịch sử chat với memory\n\n### **AI Agent (Bộ Não)**\n- Dùng Gemini AI hoặc GPT-4 để xử lý\n- Đã cấu hình múi giờ Việt Nam\n- Trả lời bằng ngôn ngữ tự nhiên\n\n### **Công Cụ Google Calendar**\n- **Get Events**: Lấy lịch của bạn\n- **Create Event**: Tạo cuộc hẹn mới\n- **Update Event**: Chỉnh sửa sự kiện có sẵn\n- **Delete Event**: Xóa cuộc hẹn\n- **Check Availability**: Tìm thời gian rảnh\n\n### **Memory**\n- Nhớ ngữ cảnh cuộc trò chuyện\n- Theo dõi các yêu cầu và phản hồi trước đó\n\n## ⚙️ Cài Đặt Quan Trọng\n**Múi giờ**: Asia/Ho_Chi_Minh (giờ Việt Nam)  \n**Model AI**: Gemini 1.5 Flash hoặc GPT-4  \n**Thời lượng mặc định**: 1 tiếng cho sự kiện mới  \n**Lịch**: Google Calendar chính của bạn  \n\n## 🐛 Xử Lý Sự Cố\n\n**Sai Giờ/Ngày?**\n- Kiểm tra timezone trong system message\n- Xác nhận múi giờ Google Calendar của bạn\n\n**Lỗi Schema?**\n- Đảm bảo credentials Google Calendar hợp lệ\n- Kiểm tra calendar ID đúng\n\n**AI Không Phản Hồi?**\n- Xác nhận API key còn hoạt động\n- Kiểm tra workflow đã được kích hoạt\n\n## 🚀 Mẹo Pro\n\n1. **Nói Rõ Ràng**: \"2 giờ chiều mai\" tốt hơn \"chiều mai\"\n2. **Cho Đủ Ngữ Cảnh**: \"Đặt lịch khám răng\" thay vì chỉ \"lịch hẹn\"\n3. **Ngôn Ngữ Tự Nhiên**: AI hiểu cách nói chuyện thông thường\n4. **Test Dần Dần**: Bắt đầu với câu đơn giản, sau đó thử phức tạp\n\n## 📝 Ví Dụ Hội Thoại\n\n**Bạn**: \"Đặt lịch ăn trưa với khách hàng ngày mai lúc 12 giờ\"  \n**AI**: \"✅ Đã tạo lịch ăn trưa ngày mai lúc 12:00! Bạn muốn thêm email khách hoặc địa điểm không?\"  \n\n**Bạn**: \"Thêm địa điểm: Nhà hàng Phố Biển\"  \n**AI**: \"✅ Đã cập nhật địa điểm: Nhà hàng Phố Biển\"  \n\n**Bạn**: \"Xem lịch ngày mai\"  \n**AI**: \"Lịch ngày mai của bạn: 12:00 - Ăn trưa với khách hàng tại Nhà hàng Phố Biển\"\n\n---\n\n**🎯 Kết Quả**: Một trợ lý AI calendar đầy đủ tính năng, hiểu tiếng Việt tự nhiên và tự động quản lý Google Calendar cho bạn!",
-        "height": 2420,
-        "width": 452
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        -16,
-        144
-      ],
-      "id": "0debd801-4da5-4413-96b8-d97837104334",
-      "name": "Sticky Note"
     },
     {
       "parameters": {
@@ -385,7 +370,7 @@
       "name": "OpenAI Chat Model1",
       "credentials": {
         "openAiApi": {
-          "id": "O00uQUVJ3Z2xrDsL",
+          "id": "INVALID_OpenAI_CREDENTIAL_ID",
           "name": "OpenAi account 7"
         }
       }
@@ -521,7 +506,7 @@
       "name": "Get Events Next 30min1",
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "podcmfCkxJVn1em8",
+          "id": "INVALID_GoogleCalendar_CREDENTIAL_ID",
           "name": "Google Calendar account 8"
         }
       }
@@ -818,7 +803,7 @@
     "executionOrder": "v1",
     "availableInMCP": false
   },
-  "versionId": "56f828bf-17f3-4670-8396-5c3cfd49f670",
+  "versionId": "de4622ec-4a5c-4033-a6f5-b103904dea9b",
   "meta": {
     "instanceId": "8ae9064574590f4bef62fe6c8cafaae52a5a90dd40cb184103af1049753a2d5d"
   },
