@@ -1,0 +1,827 @@
+{
+  "name": "03Zalo Reminder - 30 minutes before (No DataStore, Google Sheets )",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "quocdatn8nmmmmmm11232",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        816,
+        960
+      ],
+      "id": "630e5531-e20b-481f-9f34-9b663ac939f3",
+      "name": "Webhook",
+      "webhookId": "75e99638-4736-48b2-a248-46b4ceb0e5c8"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://bot-api.zaloplatforms.com/bot{{$json.access_token.trim()}}/setWebhook ",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $json.Webhook_URL }}"
+            },
+            {
+              "name": "secret_token",
+              "value": "aa1233456"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1360,
+        288
+      ],
+      "id": "4235bf34-f755-4371-b3d7-b45a539139ff",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://bot-api.zaloplatforms.com/bot{{$('Input').first().json.access_token.trim() }}/sendMessage",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "chat_id",
+              "value": "={{ $('Input').first().json.fromID }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1856,
+        960
+      ],
+      "id": "92981117-6948-4865-99af-9217e56d55ca",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "801137d3-13bc-4dae-a74d-bfb1c4454f77",
+              "name": "access_token",
+              "value": "3682309957303154161:toHJdCNZuRLAbgzFAthLBcGJROrUYGJGdRwfGNwipSjhMXQMAXFxzKIearPkfHEE",
+              "type": "string"
+            },
+            {
+              "id": "65494de1-7370-4e5d-9a5d-70c95874f65d",
+              "name": "chatInput",
+              "value": "={{ $json.body.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "30c89bc2-ac70-4c5f-a403-b5b9574ee62d",
+              "name": "sessionID",
+              "value": "={{ $json.body.message.chat.id }}",
+              "type": "string"
+            },
+            {
+              "id": "e0999750-cde7-47c3-ad1d-b508c1bba40c",
+              "name": "fromID",
+              "value": "={{ $json.body.message.from.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1088,
+        960
+      ],
+      "id": "e024d081-ca34-44cf-9192-dfdc23e07af8",
+      "name": "Input"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        912,
+        288
+      ],
+      "id": "f5e356e3-ce12-49fe-82cc-00aa80fc0d07",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "801137d3-13bc-4dae-a74d-bfb1c4454f77",
+              "name": "access_token",
+              "value": "3682309957303154161:toHJdCNZuRLAbgzFAthLBcGJROrUYGJGdRwfGNwipSjhMXQMAXFxzKIearPkfHEE",
+              "type": "string"
+            },
+            {
+              "id": "851b57e5-fbbc-4793-9fe1-8b70c2dea794",
+              "name": "Webhook_URL",
+              "value": "https://vpsn8n.anhlaptrinh.vn/webhook/quocdatn8nmmmmmm11232",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1136,
+        288
+      ],
+      "id": "f98eb5dd-e3b3-4312-9661-f7d15485872c",
+      "name": "Input1"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Input').item.json.sessionID }}",
+        "contextWindowLength": 10
+      },
+      "id": "049076c8-5f42-468e-b52d-f3d3e85c92dc",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        960,
+        1344
+      ]
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "=Lấy các sự kiện lịch. Sử dụng start_date và end_date ở định dạng ISO (ví dụ: 2025-06-25T20:00:00.000Z). Nếu không chỉ định ngày, hiển thị các sự kiện hôm nay.",
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "nguyenvannhuan90123@gmail.com",
+          "mode": "list",
+          "cachedResultName": "nguyenvannhuan90123@gmail.com"
+        },
+        "options": {
+          "timeMin": "={{ $fromAI('start_date') || DateTime.local().startOf('day').toISO() }}",
+          "timeMax": "={{ $fromAI('end_date') || DateTime.local().endOf('day').toISO() }}",
+          "singleEvents": true,
+          "orderBy": "startTime"
+        }
+      },
+      "id": "33106edd-6d18-47b0-b1f0-47bb3398632b",
+      "name": "Google Calendar - Get Events",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.2,
+      "position": [
+        1136,
+        1328
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "podcmfCkxJVn1em8",
+          "name": "Google Calendar account 8"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "=Tạo sự kiện lịch. BẮT BUỘC: event_title (chuỗi), start_date (định dạng ISO), end_date (định dạng ISO). QUAN TRỌNG: Chỉ sử dụng SAU KHI đã kiểm tra availability bằng công cụ \"Google Calendar - Check Availability\". Nếu phát hiện trùng lịch, HỎI người dùng trước khi tạo.",
+        "calendar": {
+          "__rl": true,
+          "value": "nguyenvannhuan90123@gmail.com",
+          "mode": "list",
+          "cachedResultName": "nguyenvannhuan90123@gmail.com"
+        },
+        "start": "={{ $fromAI('start_date') || DateTime.local().toISO() }}",
+        "end": "={{ $fromAI('end_date') || DateTime.local().plus({hours: 1}).toISO() }}",
+        "additionalFields": {
+          "description": "={{ $fromAI('event_description') || '' }}",
+          "location": "={{ $fromAI('location') || '' }}",
+          "summary": "={{ $fromAI('event_title') || 'New Event' }}"
+        }
+      },
+      "id": "ec6c6741-448a-481b-b2d9-57a8133f2814",
+      "name": "Google Calendar - Create Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.2,
+      "position": [
+        1296,
+        1328
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "podcmfCkxJVn1em8",
+          "name": "Google Calendar account 8"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "=Cập nhật sự kiện lịch hiện có. Bắt buộc: event_id. Tùy chọn: new_title, new_description, new_start_date (ISO), new_end_date (ISO), new_location.",
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "nguyenvannhuan90123@gmail.com",
+          "mode": "list",
+          "cachedResultName": "nguyenvannhuan90123@gmail.com"
+        },
+        "eventId": "={{ $fromAI('event_id') }}",
+        "updateFields": {
+          "description": "={{ $fromAI('new_description') }}",
+          "end": "={{ $fromAI('new_end_date') }}",
+          "location": "={{ $fromAI('new_location') }}",
+          "start": "={{ $fromAI('new_start_date') }}",
+          "summary": "={{ $fromAI('new_title') }}"
+        }
+      },
+      "id": "b184b47a-c4f0-4b2f-8ba6-fde3b4d78c52",
+      "name": "Google Calendar - Update Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1456,
+        1328
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "podcmfCkxJVn1em8",
+          "name": "Google Calendar account 8"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "=Xóa sự kiện lịch ngay khi được yêu cầu. Bắt buộc: event_id (chuỗi).",
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "nguyenvannhuan90123@gmail.com",
+          "mode": "list",
+          "cachedResultName": "nguyenvannhuan90123@gmail.com"
+        },
+        "eventId": "={{ $fromAI('event_id') }}",
+        "options": {}
+      },
+      "id": "aba7b065-3c0e-4274-856b-e0eb19e0362f",
+      "name": "Google Calendar - Delete Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1632,
+        1328
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "podcmfCkxJVn1em8",
+          "name": "Google Calendar account 8"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "BẮT BUỘC: Kiểm tra availability TRƯỚC KHI tạo bất kỳ sự kiện mới nào. Sử dụng availability_start và availability_end ở định dạng ISO để kiểm tra trùng lịch. Trả về danh sách các sự kiện hiện có trong khoảng thời gian đó. Nếu tìm thấy sự kiện = có trùng lịch, HỎI người dùng trước khi tạo.",
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "nguyenvannhuan90123@gmail.com",
+          "mode": "list",
+          "cachedResultName": "nguyenvannhuan90123@gmail.com"
+        },
+        "limit": 20,
+        "options": {
+          "timeMin": "={{ $fromAI('availability_start') || DateTime.local().startOf('day').toISO() }}",
+          "timeMax": "={{ $fromAI('availability_end') || DateTime.local().endOf('day').toISO() }}",
+          "singleEvents": true,
+          "orderBy": "startTime"
+        }
+      },
+      "id": "65e48577-35d7-4247-ac44-473fe0aec67b",
+      "name": "Google Calendar - Check Availability",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.2,
+      "position": [
+        1872,
+        1328
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "podcmfCkxJVn1em8",
+          "name": "Google Calendar account 8"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# 🤖 Google Calendar AI Agent - Hướng Dẫn Cho Người Mới\n\n## Công Dụng\nTrợ lý AI thông minh giúp quản lý Google Calendar bằng ngôn ngữ tự nhiên. Chỉ cần chat như nói chuyện với người thật!\n\n## ✨ Tính Năng\n- **Tạo Sự Kiện**: \"Đặt lịch ăn trưa ngày mai lúc 12 giờ\"\n- **Xem Lịch**: \"Hôm nay tôi có cuộc họp nào?\"\n- **Sửa Sự Kiện**: \"Dời cuộc họp 3 giờ sang 4 giờ chiều\"\n- **Xóa Sự Kiện**: \"Hủy lịch khám răng\"\n- **Kiểm Tra Thời Gian Rảnh**: \"Chiều nay tôi rảnh lúc nào?\"\n\n## 🛠️ Cài Đặt (Chỉ Làm 1 Lần)\n1. **Google Calendar**: Kết nối tài khoản Google trong phần credentials của n8n\n2. **API Gemini/OpenAI**: Thêm API key vào credentials của n8n\n3. **Import Workflow**: Copy file JSON và import vào n8n\n4. **Kích Hoạt**: Bật workflow lên\n\n## 💬 Cách Sử Dụng\nChỉ cần gõ yêu cầu bằng ngôn ngữ tự nhiên trong chat:\n\n**✅ Ví Dụ Tốt:**\n- \"Tạo họp team ngày mai lúc 9 giờ sáng\"\n- \"Đặt bữa tối với Sarah thứ 6 lúc 7 giờ tối\"\n- \"Xem lịch tuần sau\"\n- \"Hủy cuộc hẹn 2 giờ chiều\"\n- \"Thứ 5 tôi rảnh lúc nào?\"\n\n**❌ Nên Tránh:**\n- Yêu cầu phức tạp nhiều bước\n- Thời gian không rõ ràng (\"lúc nào đó sau này\")\n\n## 🔧 Các Thành Phần Chính\n\n### **Chat Trigger**\n- Điểm nhận tin nhắn từ người dùng\n- Duy trì lịch sử chat với memory\n\n### **AI Agent (Bộ Não)**\n- Dùng Gemini AI hoặc GPT-4 để xử lý\n- Đã cấu hình múi giờ Việt Nam\n- Trả lời bằng ngôn ngữ tự nhiên\n\n### **Công Cụ Google Calendar**\n- **Get Events**: Lấy lịch của bạn\n- **Create Event**: Tạo cuộc hẹn mới\n- **Update Event**: Chỉnh sửa sự kiện có sẵn\n- **Delete Event**: Xóa cuộc hẹn\n- **Check Availability**: Tìm thời gian rảnh\n\n### **Memory**\n- Nhớ ngữ cảnh cuộc trò chuyện\n- Theo dõi các yêu cầu và phản hồi trước đó\n\n## ⚙️ Cài Đặt Quan Trọng\n**Múi giờ**: Asia/Ho_Chi_Minh (giờ Việt Nam)  \n**Model AI**: Gemini 1.5 Flash hoặc GPT-4  \n**Thời lượng mặc định**: 1 tiếng cho sự kiện mới  \n**Lịch**: Google Calendar chính của bạn  \n\n## 🐛 Xử Lý Sự Cố\n\n**Sai Giờ/Ngày?**\n- Kiểm tra timezone trong system message\n- Xác nhận múi giờ Google Calendar của bạn\n\n**Lỗi Schema?**\n- Đảm bảo credentials Google Calendar hợp lệ\n- Kiểm tra calendar ID đúng\n\n**AI Không Phản Hồi?**\n- Xác nhận API key còn hoạt động\n- Kiểm tra workflow đã được kích hoạt\n\n## 🚀 Mẹo Pro\n\n1. **Nói Rõ Ràng**: \"2 giờ chiều mai\" tốt hơn \"chiều mai\"\n2. **Cho Đủ Ngữ Cảnh**: \"Đặt lịch khám răng\" thay vì chỉ \"lịch hẹn\"\n3. **Ngôn Ngữ Tự Nhiên**: AI hiểu cách nói chuyện thông thường\n4. **Test Dần Dần**: Bắt đầu với câu đơn giản, sau đó thử phức tạp\n\n## 📝 Ví Dụ Hội Thoại\n\n**Bạn**: \"Đặt lịch ăn trưa với khách hàng ngày mai lúc 12 giờ\"  \n**AI**: \"✅ Đã tạo lịch ăn trưa ngày mai lúc 12:00! Bạn muốn thêm email khách hoặc địa điểm không?\"  \n\n**Bạn**: \"Thêm địa điểm: Nhà hàng Phố Biển\"  \n**AI**: \"✅ Đã cập nhật địa điểm: Nhà hàng Phố Biển\"  \n\n**Bạn**: \"Xem lịch ngày mai\"  \n**AI**: \"Lịch ngày mai của bạn: 12:00 - Ăn trưa với khách hàng tại Nhà hàng Phố Biển\"\n\n---\n\n**🎯 Kết Quả**: Một trợ lý AI calendar đầy đủ tính năng, hiểu tiếng Việt tự nhiên và tự động quản lý Google Calendar cho bạn!",
+        "height": 2420,
+        "width": 452
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        144
+      ],
+      "id": "0debd801-4da5-4413-96b8-d97837104334",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=Bạn là trợ lý Google Calendar. Hôm nay là {{ DateTime.local().setZone('Asia/Ho_Chi_Minh').toFormat('cccc, MMMM d, yyyy') }}.\n\n**QUAN TRỌNG: Sử dụng múi giờ Việt Nam/Hồ Chí Minh**\nLUÔN sử dụng múi giờ Asia/Ho_Chi_Minh cho tất cả thời gian để khớp với vị trí người dùng.\n\n**🚨 QUY TẮC BẮT BUỘC - KIỂM TRA AVAILABILITY TRƯỚC KHI TẠO EVENT:**\n\nTRƯỚC KHI tạo BẤT KỲ sự kiện mới nào, bạn PHẢI:\n1. BẮT BUỘC sử dụng công cụ \"Google Calendar - Check Availability\" để kiểm tra xem khung giờ yêu cầu có trống không\n2. Nếu có TRÙNG LỊCH (đã có sự kiện tại thời điểm đó):\n   - TUYỆT ĐỐI KHÔNG được tạo sự kiện mới - DÙ NGƯỜI DÙNG CÓ NÓI MUỐN GIỮ NGUYÊN GIỜ\n   - PHẢI từ chối và đề xuất 2 giải pháp:\n     a) Đề xuất dời cuộc họp hiện có sang giờ khác (sử dụng Update Event tool)\n     b) Đề xuất đặt cuộc họp mới vào giờ khác (ví dụ: 15h-16h hoặc 17h-18h)\n   - NÓI với người dùng: \"Thời gian này đã có [số lượng] lịch rồi: [liệt kê tên lịch]. Em không thể tạo lịch mới vào giờ này. Bạn muốn:\n     - Dời một trong các lịch hiện có sang giờ khác (ví dụ: 15h-16h hoặc 17h-18h)?\n     - Hoặc đặt cuộc họp mới vào giờ khác?\"\n   - CHỜ người dùng chọn một trong các giải pháp\n3. CHỈ tạo sự kiện MỚI nếu:\n   - Khung giờ TRỐNG (không có trùng lịch)\n   - KHÔNG BAO GIỜ tạo event mới khi có trùng lịch, dù người dùng có nói muốn giữ nguyên giờ\n\n**QUY TẮC GIỜ ĐƠN GIẢN - TUÂN THỦ CHÍNH XÁC:**\n\nKhi người dùng nói \"5 pm\" hoặc \"5h chiều\" → dùng giờ: 17\nKhi người dùng nói \"12 pm\" hoặc \"12h trưa\" → dùng giờ: 12 (trưa)\nKhi người dùng nói \"3 pm\" hoặc \"3h chiều\" → dùng giờ: 15\nKhi người dùng nói \"8 pm\" hoặc \"8h tối\" → dùng giờ: 20\nKhi người dùng nói \"9 am\" hoặc \"9h sáng\" → dùng giờ: 9\n\n**QUY TẮC NGÀY:**\nKhi người dùng nói \"today\" → dùng: {{ DateTime.local().setZone('Asia/Ho_Chi_Minh') }}\nKhi người dùng nói \"tomorrow\" → dùng: {{ DateTime.local().setZone('Asia/Ho_Chi_Minh').plus({days: 1}) }}\n\n**VÍ DỤ CHÍNH XÁC CẦN TUÂN THEO (Giờ Việt Nam):**\n\nNgười dùng: \"tomorrow 12 pm\" (ăn trưa)\nBạn PHẢI tạo:\n- start_date: {{ DateTime.local().setZone('Asia/Ho_Chi_Minh').plus({days: 1}).set({hour: 12, minute: 0, second: 0, millisecond: 0}).toISO() }}\n- end_date: {{ DateTime.local().setZone('Asia/Ho_Chi_Minh').plus({days: 1}).set({hour: 13, minute: 0, second: 0, millisecond: 0}).toISO() }}\n\nNgười dùng: \"today 5 pm\"\nBạn PHẢI tạo:\n- start_date: {{ DateTime.local().setZone('Asia/Ho_Chi_Minh').set({hour: 17, minute: 0, second: 0, millisecond: 0}).toISO() }}\n- end_date: {{ DateTime.local().setZone('Asia/Ho_Chi_Minh').set({hour: 18, minute: 0, second: 0, millisecond: 0}).toISO() }}\n\nNgười dùng: \"tomorrow 9 am\"\nBạn PHẢI tạo:\n- start_date: {{ DateTime.local().setZone('Asia/Ho_Chi_Minh').plus({days: 1}).set({hour: 9, minute: 0, second: 0, millisecond: 0}).toISO() }}\n- end_date: {{ DateTime.local().setZone('Asia/Ho_Chi_Minh').plus({days: 1}).set({hour: 10, minute: 0, second: 0, millisecond: 0}).toISO() }}\n\n**QUY TẮC QUAN TRỌNG:**\n1. LUÔN sử dụng múi giờ Asia/Ho_Chi_Minh\n2. LUÔN kiểm tra availability TRƯỚC KHI tạo sự kiện\n3. TUYỆT ĐỐI KHÔNG tạo sự kiện mới khi có trùng lịch - phải từ chối và đề xuất giải pháp\n4. Khi có trùng lịch, đề xuất dời lịch hiện có hoặc đặt lịch mới vào giờ khác\n5. KHÔNG BAO GIỜ dùng múi giờ +10:00 - chỉ dùng giờ Việt Nam\n6. Xác nhận lại ngày và giờ chính xác trong phản hồi của bạn\n\n**KHÔNG NHẦM LẪN MÚI GIỜ - CHỈ DÙNG GIỜ VIỆT NAM!**"
+        }
+      },
+      "id": "c2e75dda-4fdb-488e-bdd6-7e30eddba6b2",
+      "name": "Calendar AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1280,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1008,
+        1152
+      ],
+      "id": "0ef13f7c-ec87-4512-82cc-8c615ef04ff7",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "O00uQUVJ3Z2xrDsL",
+          "name": "OpenAi account 7"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Calendar",
+        "height": 800,
+        "width": 1616,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        704,
+        864
+      ],
+      "id": "72a41417-9af1-4aa6-9765-45f42ef3f972",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "height": 304,
+        "width": 1488
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        720,
+        208
+      ],
+      "id": "b32ade8b-6b90-4c05-bbfe-1f039788a36d",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Nhắc Lịch",
+        "height": 640,
+        "width": 1936,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        704,
+        1856
+      ],
+      "id": "6541d4ab-e6b7-4e86-baa4-f37025c9a05d",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "check-time-before",
+              "leftValue": "={{ DateTime.fromISO(($json.start?.dateTime || $json.start?.date)).diffNow('minutes').minutes }}",
+              "rightValue": 30,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            },
+            {
+              "id": "check-time-after",
+              "leftValue": "={{ DateTime.fromISO(($json.start?.dateTime || $json.start?.date)).diffNow('minutes').minutes }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1920,
+        2096
+      ],
+      "id": "bc2cc61e-461c-4e9f-9706-c98550950a6c",
+      "name": "Check 30min trước?"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 25
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        960,
+        2096
+      ],
+      "id": "00528436-dbc0-4ccd-967b-b0487aa6f7dd",
+      "name": "Schedule Trigger2"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "nguyenvannhuan90123@gmail.com",
+          "mode": "list",
+          "cachedResultName": "nguyenvannhuan90123@gmail.com"
+        },
+        "timeMin": "={{ DateTime.local().setZone('Asia/Ho_Chi_Minh').toISO() }}",
+        "timeMax": "={{ DateTime.local().setZone('Asia/Ho_Chi_Minh').plus({ minutes: 30 }).toISO() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        1392,
+        2096
+      ],
+      "id": "19e591ba-748c-47a9-9e82-08a59cb794d8",
+      "name": "Get Events Next 30min1",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "podcmfCkxJVn1em8",
+          "name": "Google Calendar account 8"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "check-has-event",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1600,
+        2096
+      ],
+      "id": "c16a40ed-ba7f-4d13-918d-2ef604952796",
+      "name": "Có cuộc họp?1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "801137d3-13bc-4dae-a74d-bfb1c4454f77",
+              "name": "access_token",
+              "value": "3682309957303154161:toHJdCNZuRLAbgzFAthLBcGJROrUYGJGdRwfGNwipSjhMXQMAXFxzKIearPkfHEE",
+              "type": "string"
+            },
+            {
+              "id": "851b57e5-fbbc-4793-9fe1-8b70c2dea794",
+              "name": "Webhook_URL",
+              "value": "https://vpsn8n.anhlaptrinh.vn/webhook/quocdatn8nmmmmmm11232",
+              "type": "string"
+            },
+            {
+              "id": "3c6e051a-dd1a-4433-92c7-e7481a98146a",
+              "name": "fromID",
+              "value": "c083c42b2060c93e9071",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1184,
+        2096
+      ],
+      "id": "9babaa77-500d-4c6b-9d16-7cf065ee893c",
+      "name": "Input3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://bot-api.zaloplatforms.com/bot{{$('Input3').first().json.access_token.trim() }}/sendMessage",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "chat_id",
+              "value": "={{ $('Input3').first().json.fromID }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ \n  '📅 Cuộc Họp Sắp Diễn Ra \\n\\n' +\n  '📝 Tiêu đề: ' + $json.summary + '\\n' +\n  '⏰ Bắt đầu: ' + $json.start.dateTime + '\\n' +\n  '🕑 Kết thúc: ' + $json.end.dateTime + '\\n\\n' +\n  '📄 Mô tả: ' + ($json.description || 'Không có') \n}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2240,
+        2080
+      ],
+      "id": "0e41608a-95b9-4a85-81b9-288f94fd7635",
+      "name": "Nhắc-Lịch-Sắp-Diễn-Ra"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input": {
+      "main": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Input1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar - Get Events": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar - Create Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar - Update Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar - Delete Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar - Check Availability": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calendar AI Agent": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Events Next 30min1": {
+      "main": [
+        [
+          {
+            "node": "Có cuộc họp?1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Có cuộc họp?1": {
+      "main": [
+        [
+          {
+            "node": "Check 30min trước?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger2": {
+      "main": [
+        [
+          {
+            "node": "Input3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check 30min trước?": {
+      "main": [
+        [
+          {
+            "node": "Nhắc-Lịch-Sắp-Diễn-Ra",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input3": {
+      "main": [
+        [
+          {
+            "node": "Get Events Next 30min1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "56f828bf-17f3-4670-8396-5c3cfd49f670",
+  "meta": {
+    "instanceId": "8ae9064574590f4bef62fe6c8cafaae52a5a90dd40cb184103af1049753a2d5d"
+  },
+  "id": "HHnamj2it66iwm4cp89Ub",
+  "tags": []
+}
